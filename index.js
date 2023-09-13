@@ -6,6 +6,12 @@ const users = [];
 
 app.use(express.json());
 
+app.get("/", rateLimitMiddleware, (req, res) => {
+  res.status(200).json({
+    message: "Hello from the API!",
+  });
+});
+
 app.post("/users", validateUser, (req, res) => {
   const newUser = req.body;
   if (!newUser) {

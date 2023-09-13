@@ -1,5 +1,5 @@
 const express = require("express");
-const { validateUser } = require("./helpers.js");
+const { validateUser, rateLimitMiddleware } = require("./helpers.js");
 const app = express();
 const port = 3000;
 const users = [];
@@ -25,7 +25,7 @@ app.post("/users", validateUser, (req, res) => {
   });
 });
 
-app.get("/users", (req, res) => {
+app.get("/users", rateLimitMiddleware, (req, res) => {
   if (users.length < 1) {
     res.status(200).json({ status: "success", message: "No users found" });
   } else {
@@ -33,7 +33,7 @@ app.get("/users", (req, res) => {
   }
 });
 
-app.get("/users/:userId", (req, res) => {
+app.get("/users/:userId", rateLimitMiddleware, (req, res) => {
   const userId = req.params.userId;
   const user = users.find((user) => user.id === userId);
   if (!user) {
